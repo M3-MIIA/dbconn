@@ -1,1 +1,2 @@
-from .db import DB, text
+from sqlalchemy import text
+from .db import DB
