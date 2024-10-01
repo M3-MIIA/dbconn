@@ -10,10 +10,11 @@ setup(
     packages=find_packages(),  # Automaticamente encontra os pacotes Python
     install_requires=[
         # Dependências do seu pacote (exemplo)
-        'psycopg2-binary',
+        # 'psycopg2-binary',
         'SQLAlchemy',
         'boto3',
-        'botocore'
+        'botocore',
+        'psycopg[binary] == 3.1.17'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
