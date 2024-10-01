@@ -9,8 +9,6 @@ setup(
     url="https://github.com/M3-MIIA/dbconn",  # URL do projeto
     packages=find_packages(),  # Automaticamente encontra os pacotes Python
     install_requires=[
-        # Dependências do seu pacote (exemplo)
-        # 'psycopg2-binary',
         'SQLAlchemy',
         'boto3',
         'botocore',

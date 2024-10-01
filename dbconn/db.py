@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
+from sqlalchemy import text
+
 from .get_secrets import get_secret
 
 DB_URL = get_secret()
