@@ -1,8 +1,10 @@
-import json
+import os, json
 
 import boto3
 from botocore.exceptions import ClientError
 
+service = os.environ['SERVICE']
+region_name = os.environ['AWS_REGION']
 
 def _parse_secret(secret_obj):
     return f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@{secret_obj['host']}:5432/{secret_obj['dbname']}"
@@ -10,8 +12,7 @@ def _parse_secret(secret_obj):
 
 def _get_secret():
 
-    secret_name = "essay/postgres"
-    region_name = "sa-east-1"
+    secret_name = f"{service}/postgres"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
