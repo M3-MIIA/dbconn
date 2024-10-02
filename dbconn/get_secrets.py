@@ -3,7 +3,7 @@ import os, json
 import boto3
 from botocore.exceptions import ClientError
 
-service = os.environ['SERVICE']
+service = os.environ['SERVICE_NAME']
 region_name = os.environ['AWS_REGION']
 
 def _parse_secret(secret_obj):
