@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="dbconn",  # Nome do pacote
+    name="dbconn-miia",  # Nome do pacote
     version="0.1.0",  # Versão inicial
     description="Um pacote para gerenciar conexões de banco de dados",
     author="M3-MIIA",

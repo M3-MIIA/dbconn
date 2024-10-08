@@ -4,7 +4,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 service = os.environ['SERVICE_NAME']
-region_name = os.environ['AWS_REGION']
+region_name = os.environ['DEPLOY_AWS_REGION']
 
 def _parse_secret(secret_obj):
     return f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@{secret_obj['host']}:5432/{secret_obj['dbname']}"

@@ -1,0 +1,4 @@
+SQLAlchemy
+boto3
+botocore
+psycopg[binary]==3.1.17

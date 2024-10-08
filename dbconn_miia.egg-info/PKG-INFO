@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: dbconn-miia
+Version: 0.1.0
+Summary: Um pacote para gerenciar conexões de banco de dados
+Home-page: https://github.com/M3-MIIA/dbconn
+Author: M3-MIIA
+Author-email: ari.oliveira@protonmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Requires-Dist: SQLAlchemy
+Requires-Dist: boto3
+Requires-Dist: botocore
+Requires-Dist: psycopg[binary]==3.1.17
