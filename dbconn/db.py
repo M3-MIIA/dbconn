@@ -2,6 +2,10 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from .get_secrets import get_secret
 
-DB_URL = get_secret()
+def connect_to_db(tenant_id):
+    DB_URL = get_secret()
+    dbschema=tenant_id # Searches left-to-right
+    DB: AsyncEngine = create_async_engine(DB_URL,
+        connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
-DB: AsyncEngine = create_async_engine(DB_URL)
+    return DB
