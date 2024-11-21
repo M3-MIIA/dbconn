@@ -7,7 +7,7 @@ service = os.environ['SERVICE_NAME']
 region_name = os.environ['DEPLOY_AWS_REGION']
 
 def _parse_secret(secret_obj):
-    return f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@{secret_obj['host']}:5432/{secret_obj['dbname']}"
+    return f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@{secret_obj['host']}:{secret_obj['port']}/{secret_obj['dbname']}"
 
 
 def _get_secret():
