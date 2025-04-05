@@ -12,7 +12,7 @@ def _parse_secret(secret_obj):
 
 def _get_secret():
 
-    secret_name = f"{service}/proxy/postgres"
+    secret_name = f"{service}/postgres"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
