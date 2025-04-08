@@ -1,39 +1,44 @@
-import os, json
+import os
+import json
+from typing import Dict, Any, Optional
 
 import boto3
 from botocore.exceptions import ClientError
 
-service = os.environ['SERVICE_NAME']
-region_name = os.environ['DEPLOY_AWS_REGION']
 
-def _parse_secret(secret_obj):
-    return f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@{secret_obj['host']}:5432/{secret_obj['dbname']}"
+def _parse_secret(secret_obj: Dict[str, Any]) -> str:
+    try:
+        return (f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@"
+                f"{secret_obj['host']}:{secret_obj['port']}/{secret_obj['dbname']}")
+    except KeyError as e:
+        raise KeyError(f"Missing required database parameter in secret: {e}") from e
 
 
-def _get_secret():
+def _get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = None) -> Dict[str, Any]:
+    
+    try:
+        secret_name = os.environ['MIIA_DBCONN_SECRET_NAME']
+        region_name = os.environ['AWS_DEFAULT_REGION']
+    except KeyError as e:
+        raise EnvironmentError(f"{e} environment variable is required")
 
-    secret_name = f"{service}/postgres"
-
-    # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
 
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        secret_string = get_secret_value_response["SecretString"]
+
+        if not secret_string:
+            raise ValueError("Retrieved secret is empty")
+        return json.loads(secret_string)
+
     except ClientError as e:
-        # For a list of exceptions thrown, see
-        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        raise e
+        error_message = f"Error retrieving secret '{secret_name}': {str(e)}"
+        raise ClientError(e.response, e.operation_name) from e
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON in secret: {str(e)}") from e
 
-    secret = get_secret_value_response["SecretString"]
-
-    if not secret:
-        raise ValueError
-
-    return json.loads(secret)
-
-
-def get_secret():
-    secret = _get_secret()
+def get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = None) -> str:
+    secret = _get_secret(secret_name=secret_name, region_name=region_name)
     return _parse_secret(secret)
-
