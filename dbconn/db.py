@@ -9,3 +9,5 @@ def connect_to_db(tenant_id='public'):
         connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
     return DB
+
+DB = connect_to_db()
