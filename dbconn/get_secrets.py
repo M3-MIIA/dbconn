@@ -17,8 +17,8 @@ def _parse_secret(secret_obj: Dict[str, Any]) -> str:
 def _get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = None) -> Dict[str, Any]:
     
     try:
-        secret_name = os.environ['MIIA_DBCONN_SECRET_NAME']
-        region_name = os.environ['AWS_DEFAULT_REGION']
+        secret_name = secret_name or os.environ['MIIA_DBCONN_SECRET_NAME']
+        region_name = region_name or os.environ['AWS_DEFAULT_REGION']
     except KeyError as e:
         raise EnvironmentError(f"{e} environment variable is required")
 
