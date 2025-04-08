@@ -5,23 +5,18 @@ from typing import Dict, Any, Optional
 import boto3
 from botocore.exceptions import ClientError
 
+service = os.environ['SERVICE_NAME']
+region_name = os.environ['DEPLOY_AWS_REGION']
 
-def _parse_secret(secret_obj: Dict[str, Any]) -> str:
-    try:
-        return (f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@"
-                f"{secret_obj['host']}:{secret_obj['port']}/{secret_obj['dbname']}")
-    except KeyError as e:
-        raise KeyError(f"Missing required database parameter in secret: {e}") from e
+def _parse_secret(secret_obj):
+    return f"postgresql+psycopg://{secret_obj['username']}:{secret_obj['password']}@{secret_obj['host']}:{secret_obj['port']}/{secret_obj['dbname']}"
 
 
-def _get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = None) -> Dict[str, Any]:
-    
-    try:
-        secret_name = secret_name or os.environ['MIIA_DBCONN_SECRET_NAME']
-        region_name = region_name or os.environ['AWS_DEFAULT_REGION']
-    except KeyError as e:
-        raise EnvironmentError(f"{e} environment variable is required")
+def _get_secret():
 
+    secret_name = f"{service}/postgres"
+
+    # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(service_name="secretsmanager", region_name=region_name)
 
@@ -39,6 +34,6 @@ def _get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = 
     except json.JSONDecodeError as e:
         raise ValueError(f"Invalid JSON in secret: {str(e)}") from e
 
-def get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = None) -> str:
-    secret = _get_secret(secret_name=secret_name, region_name=region_name)
+def get_secret():
+    secret = _get_secret()
     return _parse_secret(secret)
