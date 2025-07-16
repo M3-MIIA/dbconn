@@ -17,12 +17,11 @@ def _parse_secret(secret_obj: Dict[str, Any]) -> str:
 def _get_secret(secret_name: Optional[str] = None, region_name: Optional[str] = None) -> Dict[str, Any]:
     try:
         secret_name = secret_name or os.environ['MIIA_DBCONN_SECRET_NAME']
-        region_name = region_name or os.environ['DEPLOY_AWS_REGION']
     except KeyError as e:
         raise EnvironmentError(f"{e} environment variable is required")
 
     session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager", region_name=region_name)
+    client = session.client(service_name="secretsmanager")
 
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
